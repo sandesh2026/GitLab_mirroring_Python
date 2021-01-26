@@ -1,6 +1,7 @@
 import requests
 import json
 import csv
+import time
 
 def does_github_repo_exist(access_token,org_name,repo_name):
     payload={}
@@ -40,6 +41,7 @@ def add_remote(github_access_token, gitlab_access_token, mirror_object, github_u
         print("Mapped "+mirror_object['GitLab Group Name']+"/"+mirror_object['GitLab Project Name']+" with "+mirror_object['GitHub Org']+"/"+mirror_object['GitLab Project Name'])
         return True
     else:
+        print("Payload "+str(payload)+" and URL is "+str(url))
         print("Failed to map - "+str(response.status_code))
         return False
 
@@ -97,6 +99,7 @@ for i in data_objects:
     else:
         i['GitHub exists'] = False
         if create_github_repo(github_access_token,i):
+            time.sleep(5)
             if add_remote(github_access_token,i['GitHub Org'],i,github_username):
                 print("Successfully added mapping for "+str(i['GitLab Group Name'])+"/"+str(i['GitLab Project Name'])+"---> GitHub:"+str(i['GitHub Org'])+"/"+str(i['GitLab Project Name']))
             else:
