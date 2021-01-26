@@ -27,10 +27,10 @@ def read_csv_file(data_file):
             line_count = line_count+1
     return return_array
 
-def add_remote(github_access_token, gitlab_access_token, mirror_object, username):
+def add_remote(github_access_token, gitlab_access_token, mirror_object, github_username):
     url="https://gitlab.com/api/v4/projects/"+mirror_object['GitLab Project ID']+"/remote_mirrors?enabled=true"
     payload = {
-        "url":"https://"+username+":"+github_access_token+"@github.com/"+mirror_object['GitHub Org']+"/"+mirror_object['GitLab Project Name']+".git"
+        "url":"https://"+github_username+":"+github_access_token+"@github.com/"+mirror_object['GitHub Org']+"/"+mirror_object['GitLab Project Name']+".git"
     }
     headers = {
         'Private-Token': gitlab_access_token,
@@ -60,18 +60,18 @@ def create_github_repo(github_access_token,mirror_object):
     else:
         return False
 
-gitlab_access_token = '<GITLAB_API_TOKEN>'
-github_access_token = "<GITHUB_PAT>"
-username="preacherlemon"
-data_file = "data_file.csv"
-data_objects=read_csv_file(data_file)
+creds = read_csv_file("tokens.csv").pop(0)
+gitlab_access_token = creds['GitLab Access Token']
+github_access_token = creds['GitHub Access Token']
+github_username = creds['GitHub Username']
+data_objects=read_csv_file("data_file.csv")
 for i in data_objects:
     if does_github_repo_exist(github_access_token,i['GitHub Org'],i['GitLab Project Name']):
         i['GitHub exists'] = True
         print("Repo Exists")
-        add_remote(github_access_token,gitlab_access_token,i,username)
+        add_remote(github_access_token,gitlab_access_token,i,github_username)
     else:
         i['GitHub exists'] = False
         print("Repo doesn't exist")
         create_github_repo(github_access_token,i)
-        add_remote(github_access_token,i['GitHub Org'],i,username)
+        add_remote(github_access_token,i['GitHub Org'],i,github_username)
