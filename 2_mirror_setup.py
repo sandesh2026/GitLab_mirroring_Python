@@ -88,12 +88,18 @@ for i in data_objects:
     if does_github_repo_exist(github_access_token,i['GitHub Org'],i['GitLab Project Name']):
         i['GitHub exists'] = True
         if not does_gitlab_mirror_exist(gitlab_access_token,i,github_username):
-            add_remote(github_access_token,gitlab_access_token,i,github_username)
+            if add_remote(github_access_token,gitlab_access_token,i,github_username):
+                print("Successfully added mapping for "+str(i['GitLab Group Name'])+"/"+str(i['GitLab Project Name'])+"---> GitHub:"+str(i['GitHub Org'])+"/"+str(i['GitLab Project Name']))
+            else:
+                print("FAILED TO MAP - "+str(i['GitLab Group Name'])+"/"+str(i['GitLab Project Name'])+"---> GitHub:"+str(i['GitHub Org'])+"/"+str(i['GitLab Project Name']))
         else:
             print("Mapping of GitLab: "+str(i['GitLab Group Name'])+"/"+str(i['GitLab Project Name'])+"---> GitHub:"+str(i['GitHub Org'])+"/"+str(i['GitLab Project Name'])+" already exists! Skipping this!")
     else:
         i['GitHub exists'] = False
         if create_github_repo(github_access_token,i):
-            add_remote(github_access_token,i['GitHub Org'],i,github_username)
+            if add_remote(github_access_token,i['GitHub Org'],i,github_username):
+                print("Successfully added mapping for "+str(i['GitLab Group Name'])+"/"+str(i['GitLab Project Name'])+"---> GitHub:"+str(i['GitHub Org'])+"/"+str(i['GitLab Project Name']))
+            else:
+                print("FAILED TO MAP - "+str(i['GitLab Group Name'])+"/"+str(i['GitLab Project Name'])+"---> GitHub:"+str(i['GitHub Org'])+"/"+str(i['GitLab Project Name']))
         else:
             print("DEBUG: Error in creating the repo. Check the data_file.csv")
