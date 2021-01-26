@@ -37,12 +37,12 @@ def add_remote(github_access_token, gitlab_access_token, mirror_object, github_u
         'Private-Token': gitlab_access_token,
     }
     response = requests.request("POST", url, headers=headers, data=payload)
+
     if response.status_code >=200 and response.status_code<300:
-        print("Mapped "+mirror_object['GitLab Group Name']+"/"+mirror_object['GitLab Project Name']+" with "+mirror_object['GitHub Org']+"/"+mirror_object['GitLab Project Name'])
         return True
     else:
-        print("Payload "+str(payload)+" and URL is "+str(url))
         print("Failed to map - "+str(response.status_code))
+        print("Response is "+str(response.text))
         return False
 
 def create_github_repo(github_access_token,mirror_object):
@@ -100,7 +100,7 @@ for i in data_objects:
         i['GitHub exists'] = False
         if create_github_repo(github_access_token,i):
             time.sleep(5)
-            if add_remote(github_access_token,i['GitHub Org'],i,github_username):
+            if add_remote(github_access_token,gitlab_access_token,i,github_username):
                 print("Successfully added mapping for "+str(i['GitLab Group Name'])+"/"+str(i['GitLab Project Name'])+"---> GitHub:"+str(i['GitHub Org'])+"/"+str(i['GitLab Project Name']))
             else:
                 print("FAILED TO MAP - "+str(i['GitLab Group Name'])+"/"+str(i['GitLab Project Name'])+"---> GitHub:"+str(i['GitHub Org'])+"/"+str(i['GitLab Project Name']))
