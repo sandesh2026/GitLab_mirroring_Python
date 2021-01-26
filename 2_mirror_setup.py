@@ -40,6 +40,7 @@ def add_remote(github_access_token, gitlab_access_token, mirror_object, github_u
         print("Mapped "+mirror_object['GitLab Group Name']+"/"+mirror_object['GitLab Project Name']+" with "+mirror_object['GitHub Org']+"/"+mirror_object['GitLab Project Name'])
         return True
     else:
+        print("Failed to map - "+str(response.status_code))
         return False
 
 def create_github_repo(github_access_token,mirror_object):
@@ -50,13 +51,12 @@ def create_github_repo(github_access_token,mirror_object):
         "name":mirror_object['GitLab Project Name'],
         "private":"true"
     }
-    print(payload)
     headers = {
         'Accept': 'application/vnd.github.v3+json',
         'Authorization': 'token '+github_access_token
     }
     response = requests.request("POST", url, headers=headers, json=payload)
-    if response.status_code == 200:
+    if response.status_code >= 200 or response.status_code<300:
         return True
     else:
         return False
