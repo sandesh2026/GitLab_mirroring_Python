@@ -2,6 +2,10 @@ import requests
 import json
 import csv
 
+#READ THIS FIRST:
+#1. VERY IMPORTANT: Create a file called tokens.csv and create it in this fashion. CSV files are gitignored so this won't find its way to GitHub !
+#GitLab Access Token, GitHub Access Token
+#blahblahblah, ghblaahblhakhabd
 
 def get_gitlab_group_ids(access_token):
     # This module is designed to 
@@ -82,7 +86,6 @@ def read_csv_file(data_file):
             line_count = line_count+1
     return return_array
 
-#Get a CSV with the ProjectID, Group, Name 
 creds = read_csv_file("tokens.csv").pop(0)
 gitlab_access_token = creds['GitLab Access Token']
 (exit_code,pid_list) = get_gitlab_project_ids(gitlab_access_token)
