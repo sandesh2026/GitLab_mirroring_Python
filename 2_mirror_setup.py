@@ -36,7 +36,8 @@ def add_remote(github_access_token, gitlab_access_token, mirror_object, github_u
         'Private-Token': gitlab_access_token,
     }
     response = requests.request("POST", url, headers=headers, data=payload)
-    if response.status_code == 200:
+    if response.status_code >=200 and response.status_code<300:
+        print("Mapped "+mirror_object['GitLab Group Name']+"/"+mirror_object['GitLab Project Name']+" with "+mirror_object['GitHub Org']+"/"+mirror_object['GitLab Project Name'])
         return True
     else:
         return False
