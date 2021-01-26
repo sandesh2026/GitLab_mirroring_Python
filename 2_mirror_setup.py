@@ -99,7 +99,7 @@ for i in data_objects:
     else:
         i['GitHub exists'] = False
         if create_github_repo(github_access_token,i):
-            time.sleep(5)
+            #time.sleep(5)
             if add_remote(github_access_token,gitlab_access_token,i,github_username):
                 print("Successfully added mapping for "+str(i['GitLab Group Name'])+"/"+str(i['GitLab Project Name'])+"---> GitHub:"+str(i['GitHub Org'])+"/"+str(i['GitLab Project Name']))
             else:
