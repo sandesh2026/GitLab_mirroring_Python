@@ -29,4 +29,4 @@ I used these.
     5.4: If the repo doesn't exist - it creates the repo for the Org you specified in the CSV file and then sets up the mirror
     ```
 6. Spot check a few Projects in GitLab and see if the mirror is setup
-7. TODO: The remote mirror update doesnt happen automatically. So a force update through the API could be done (for Paid plans); or maybe a dummy commit
+7. TODO: The remote mirror update doesnt happen automatically. ~So a force update through the API could be done (for Paid plans); or maybe a dummy commit~ No APIs available to do this :( . We will instead use Tags. Creation of a tag would trigger a force update.
