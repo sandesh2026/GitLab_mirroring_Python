@@ -89,20 +89,56 @@ data_objects=read_csv_file("data_file.csv")
 for i in data_objects:
     if does_github_repo_exist(github_access_token,i['GitHub Org'],i['GitLab Project Name']):
         i['GitHub exists'] = True
+        i['repo-created'] = False
         if not does_gitlab_mirror_exist(gitlab_access_token,i,github_username):
             if add_remote(github_access_token,gitlab_access_token,i,github_username):
+                i['add-remote'] = True
                 print("Successfully added mapping for "+str(i['GitLab Group Name'])+"/"+str(i['GitLab Project Name'])+"---> GitHub:"+str(i['GitHub Org'])+"/"+str(i['GitLab Project Name']))
             else:
+                i['add-remote'] = False
                 print("FAILED TO MAP - "+str(i['GitLab Group Name'])+"/"+str(i['GitLab Project Name'])+"---> GitHub:"+str(i['GitHub Org'])+"/"+str(i['GitLab Project Name']))
         else:
+            i['add-remote'] = "Existed"
             print("Mapping of GitLab: "+str(i['GitLab Group Name'])+"/"+str(i['GitLab Project Name'])+"---> GitHub:"+str(i['GitHub Org'])+"/"+str(i['GitLab Project Name'])+" already exists! Skipping this!")
     else:
         i['GitHub exists'] = False
         if create_github_repo(github_access_token,i):
             #time.sleep(5)
+            i['repo-created'] = True
             if add_remote(github_access_token,gitlab_access_token,i,github_username):
+                i['add-remote'] = True
                 print("Successfully added mapping for "+str(i['GitLab Group Name'])+"/"+str(i['GitLab Project Name'])+"---> GitHub:"+str(i['GitHub Org'])+"/"+str(i['GitLab Project Name']))
             else:
+                i['add-remote'] = False
                 print("FAILED TO MAP - "+str(i['GitLab Group Name'])+"/"+str(i['GitLab Project Name'])+"---> GitHub:"+str(i['GitHub Org'])+"/"+str(i['GitLab Project Name']))
         else:
+            i['repo-created'] = False
             print("DEBUG: Error in creating the repo. Check the data_file.csv")
+
+#Generate Mirroring report
+with open('mirror_setup_details.csv', mode='w') as data_file: 
+    data_writer = csv.writer(data_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    data_writer.writerow(
+            [
+                'GitLab Group ID', 
+                'GitLab Group Name', 
+                'GitLab Project ID', 
+                'GitLab Project Name', 
+                'GitHub Org', 
+                'GitHub exists', 
+                'repo-created', 
+                'add-remote'
+            ])
+
+    for i in data_objects:
+        data_writer.writerow(
+            [
+                i['GitLab Group ID'], 
+                i['GitLab Group Name'], 
+                i['GitLab Project ID'], 
+                i['GitLab Project Name'], 
+                i['GitHub Org'], 
+                i['GitHub exists'], 
+                i['repo-created'], 
+                i['add-remote']
+            ])
