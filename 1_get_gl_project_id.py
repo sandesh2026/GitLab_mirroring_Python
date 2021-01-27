@@ -4,8 +4,8 @@ import csv
 
 #READ THIS FIRST:
 #1. VERY IMPORTANT: Create a file called tokens.csv and create it in this fashion. CSV files are gitignored so this won't find its way to GitHub !
-#GitLab Access Token, GitHub Access Token
-#blahblahblah, ghblaahblhakhabd
+#GitLab Access Token,GitHub Access Token,GitHub Username
+#blahblahblah,ghblaahblhakhabd,user123
 #2. The API tokens used above should have the relevant permissions:
 # GitLab: Basically admin rights over all groups and projects. 
 # GitHub: Create repo scope is very very important - best to check the repo scope entirely
